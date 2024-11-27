@@ -113,22 +113,32 @@
     </div>
 
     <script>
-        const loadDirectory = () => {
-            const savedDirectory = localStorage.getItem('teamDirectory');
-            return savedDirectory ? JSON.parse(savedDirectory) : {
-                "Team Gordy Campbell": [
-                    { store: "IHWorkwear", email: "ihhelp@interform.net" },
-                    { store: "IH", email: "ihhelp@interform.net" },
-                    { store: "ICH", email: "TBD" }
-                ],
-                "Team Jim Hirst": [
-                    { store: "Instructure", email: "jh_team@interform.net" },
-                    { store: "AllWest", email: "AllWest@Interform.net" },
-                    { store: "Karius", email: "karius@interform.net" }
-                ]
-            };
+        // Default data for all teams and stores
+        const defaultDirectory = {
+            "Team Gordy Campbell": [
+                { store: "IHWorkwear", email: "ihhelp@interform.net" },
+                { store: "IH", email: "ihhelp@interform.net" },
+                { store: "ICH", email: "TBD" }
+            ],
+            "Team Jim Hirst": [
+                { store: "Instructure", email: "jh_team@interform.net" },
+                { store: "AllWest", email: "AllWest@Interform.net" },
+                { store: "Karius", email: "karius@interform.net" }
+            ],
+            "Team Mike Hirst": [
+                { store: "CacheVB", email: "CacheValley@interform.net" },
+                { store: "Campbell", email: "" },
+                { store: "IFG Golf", email: "mike@interform.net" }
+            ]
         };
 
+        // Load the directory from localStorage, merge with default if needed
+        const loadDirectory = () => {
+            const savedDirectory = JSON.parse(localStorage.getItem('teamDirectory')) || {};
+            return { ...defaultDirectory, ...savedDirectory };
+        };
+
+        // Save the directory back to localStorage
         const saveDirectory = (directory) => {
             localStorage.setItem('teamDirectory', JSON.stringify(directory));
         };
@@ -200,9 +210,13 @@
         const showAddTeamForm = () => {
             const teamName = prompt("Enter the new team name:");
             if (teamName) {
-                directory[teamName] = [];
-                saveDirectory(directory);
-                renderDirectory();
+                if (!directory[teamName]) {
+                    directory[teamName] = [];
+                    saveDirectory(directory);
+                    renderDirectory();
+                } else {
+                    alert("Team already exists!");
+                }
             }
         };
 
