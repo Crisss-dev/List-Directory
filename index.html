@@ -29,11 +29,14 @@
         }
 
         .team h2 {
-            background-color: #0078d4;
+            background-color: #666;
             color: #fff;
             padding: 10px;
             border-radius: 4px;
             margin-top: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .store {
@@ -42,7 +45,7 @@
 
         .store h3 {
             margin: 5px 0;
-            color: #0078d4;
+            color: #444;
         }
 
         .email {
@@ -56,7 +59,7 @@
         }
 
         .copy-btn {
-            background-color: #0078d4;
+            background-color: #444;
             color: #fff;
             border: none;
             padding: 5px 10px;
@@ -65,30 +68,28 @@
         }
 
         .copy-btn:hover {
-            background-color: #005bb5;
+            background-color: #222;
         }
 
         .add-section {
             margin-top: 20px;
             padding-top: 20px;
-            border-top: 2px solid #0078d4;
-        }
-
-        .add-section input, .add-section button {
-            margin: 5px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            text-align: center;
+            border-top: 2px solid #444;
         }
 
         .add-section button {
-            background-color: #0078d4;
+            background-color: #444;
             color: #fff;
+            border: none;
+            font-size: 24px;
             cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 4px;
         }
 
         .add-section button:hover {
-            background-color: #005bb5;
+            background-color: #222;
         }
     </style>
 </head>
@@ -97,11 +98,7 @@
         <div id="directory"></div>
 
         <div class="add-section">
-            <h3>Add New Entry</h3>
-            <input type="text" id="team-name" placeholder="Team Name" />
-            <input type="text" id="store-name" placeholder="Store Name" />
-            <input type="text" id="email" placeholder="Email Address" />
-            <button onclick="addNewEntry()">Add Entry</button>
+            <button onclick="showAddTeamForm()">+</button>
         </div>
     </div>
 
@@ -110,52 +107,8 @@
             "Team Gordy Campbell": [
                 { store: "IHWorkwear", email: "ihhelp@interform.net" },
                 { store: "IH", email: "ihhelp@interform.net" },
-                { store: "ICH", email: "TBD" },
-                { store: "EXTRA SPACE UNIFORM", email: "ess@interform.net" },
-                { store: "EXTRA SPACE ANNIVERSARY", email: "info@ExtraSpaceAnniversary.americommerce.com" },
-                { store: "EXTRA SPACE SIGNAGE", email: "info@ExtraSpaceSignage.americommerce.com" }
-            ],
-            "Team Jim Hirst": [
-                { store: "Instructure", email: "jh_team@interform.net" },
-                { store: "AllWest", email: "AllWest@Interform.net" },
-                { store: "Karius", email: "karius@interform.net" },
-                { store: "Altabank", email: "info@AltaBank.americommerce.com" }
-            ],
-            "Team Mike Hirst": [
-                { store: "CacheVB", email: "CacheValley@interform.net" },
-                { store: "Campbell", email: "" },
-                { store: "ESS Awards", email: "" },
-                { store: "ESS Mgmt", email: "" },
-                { store: "IFG Golf", email: "mike@interform.net" },
-                { store: "Smiths", email: "smithsuniform@interform.net" },
-                { store: "Zions", email: "zions@interform.net" }
-            ],
-            "Team Troy Osborn": [
-                { store: "Tab", email: "" },
-                { store: "Ascend", email: "" },
-                { store: "CRS", email: "" }
-            ],
-            "Team Candace Hadley": [
-                { store: "CRH", email: "crhmerch@interform.net" },
-                { store: "DealerBuilt", email: "DealerBuilt@interform.net" },
-                { store: "HCASrubs", email: "" },
-                { store: "Gold Stream Retirement", email: "" }
-            ],
-            "Team Davis Wall": [
-                { store: "Feller", email: "fellerwendtstore@interform.net" },
-                { store: "FreeUp Storage", email: "FreeUpStorage@interform.net" },
-                { store: "StorageStar", email: "StorageStar@interform.net" }
-            ],
-            "Team Peggy": [
-                { store: "Mountainland", email: "ms@interform.net" },
-                { store: "Academy", email: "" }
-            ],
-            "Team Davey Elggren": [],
-            "Team Travis Wilson": [],
-            "Team Brian Christopherson": [],
-            "Team Steve Hollberg": [],
-            "Team Kirk Brown": [],
-            "Team Jim Ferraro": []
+                { store: "ICH", email: "TBD" }
+            ]
         };
 
         const renderDirectory = () => {
@@ -167,7 +120,9 @@
                 teamDiv.className = 'team';
 
                 const teamHeader = document.createElement('h2');
-                teamHeader.textContent = team;
+                teamHeader.innerHTML = `
+                    ${team} <button onclick="showAddStoreForm('${team}')">+</button>
+                `;
                 teamDiv.appendChild(teamHeader);
 
                 directory[team].forEach((entry) => {
@@ -199,27 +154,24 @@
             }
         };
 
-        const addNewEntry = () => {
-            const teamName = document.getElementById('team-name').value.trim();
-            const storeName = document.getElementById('store-name').value.trim();
-            const email = document.getElementById('email').value.trim();
-
-            if (!teamName || !storeName || !email) {
-                alert('Please fill out all fields');
-                return;
-            }
-
-            if (!directory[teamName]) {
+        const showAddTeamForm = () => {
+            const teamName = prompt("Enter the new team name:");
+            if (teamName) {
                 directory[teamName] = [];
+                renderDirectory();
             }
+        };
 
-            directory[teamName].push({ store: storeName, email: email });
+        const showAddStoreForm = (teamName) => {
+            const storeName = prompt("Enter the new store name:");
+            const email = prompt("Enter the store's email address:");
 
-            document.getElementById('team-name').value = '';
-            document.getElementById('store-name').value = '';
-            document.getElementById('email').value = '';
-
-            renderDirectory();
+            if (storeName && email) {
+                directory[teamName].push({ store: storeName, email: email });
+                renderDirectory();
+            } else {
+                alert("Both store name and email are required.");
+            }
         };
 
         renderDirectory();
