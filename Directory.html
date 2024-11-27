@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Directory</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .team {
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+
+        .team h2 {
+            background-color: #0078d4;
+            color: #fff;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 0;
+        }
+
+        .store {
+            margin: 10px 0 20px 20px;
+        }
+
+        .store h3 {
+            margin: 5px 0;
+            color: #0078d4;
+        }
+
+        .email {
+            margin: 5px 0 5px 40px;
+            display: flex;
+            align-items: center;
+        }
+
+        .email span {
+            margin-right: 10px;
+        }
+
+        .copy-btn {
+            background-color: #0078d4;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .copy-btn:hover {
+            background-color: #005bb5;
+        }
+
+        .add-section {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #0078d4;
+        }
+
+        .add-section input, .add-section button {
+            margin: 5px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .add-section button {
+            background-color: #0078d4;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .add-section button:hover {
+            background-color: #005bb5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="directory"></div>
+
+        <div class="add-section">
+            <h3>Add New Entry</h3>
+            <input type="text" id="team-name" placeholder="Team Name" />
+            <input type="text" id="store-name" placeholder="Store Name" />
+            <input type="text" id="email" placeholder="Email Address" />
+            <button onclick="addNewEntry()">Add Entry</button>
+        </div>
+    </div>
+
+    <script>
+        const directory = {
+            "Team Gordy Campbell": [
+                { store: "IHWorkwear", email: "ihhelp@interform.net" },
+                { store: "IH", email: "ihhelp@interform.net" },
+                { store: "ICH", email: "TBD" },
+                { store: "EXTRA SPACE UNIFORM", email: "ess@interform.net" },
+                { store: "EXTRA SPACE ANNIVERSARY", email: "info@ExtraSpaceAnniversary.americommerce.com" },
+                { store: "EXTRA SPACE SIGNAGE", email: "info@ExtraSpaceSignage.americommerce.com" }
+            ],
+            "Team Jim Hirst": [
+                { store: "Instructure", email: "jh_team@interform.net" },
+                { store: "AllWest", email: "AllWest@Interform.net" },
+                { store: "Karius", email: "karius@interform.net" },
+                { store: "Altabank", email: "info@AltaBank.americommerce.com" }
+            ],
+            "Team Mike Hirst": [
+                { store: "CacheVB", email: "CacheValley@interform.net" },
+                { store: "Campbell", email: "" },
+                { store: "ESS Awards", email: "" },
+                { store: "ESS Mgmt", email: "" },
+                { store: "IFG Golf", email: "mike@interform.net" },
+                { store: "Smiths", email: "smithsuniform@interform.net" },
+                { store: "Zions", email: "zions@interform.net" }
+            ],
+            "Team Troy Osborn": [
+                { store: "Tab", email: "" },
+                { store: "Ascend", email: "" },
+                { store: "CRS", email: "" }
+            ],
+            "Team Candace Hadley": [
+                { store: "CRH", email: "crhmerch@interform.net" },
+                { store: "DealerBuilt", email: "DealerBuilt@interform.net" },
+                { store: "HCASrubs", email: "" },
+                { store: "Gold Stream Retirement", email: "" }
+            ],
+            "Team Davis Wall": [
+                { store: "Feller", email: "fellerwendtstore@interform.net" },
+                { store: "FreeUp Storage", email: "FreeUpStorage@interform.net" },
+                { store: "StorageStar", email: "StorageStar@interform.net" }
+            ],
+            "Team Peggy": [
+                { store: "Mountainland", email: "ms@interform.net" },
+                { store: "Academy", email: "" }
+            ],
+            "Team Davey Elggren": [],
+            "Team Travis Wilson": [],
+            "Team Brian Christopherson": [],
+            "Team Steve Hollberg": [],
+            "Team Kirk Brown": [],
+            "Team Jim Ferraro": []
+        };
+
+        const renderDirectory = () => {
+            const directoryDiv = document.getElementById('directory');
+            directoryDiv.innerHTML = '';
+
+            for (const team in directory) {
+                const teamDiv = document.createElement('div');
+                teamDiv.className = 'team';
+
+                const teamHeader = document.createElement('h2');
+                teamHeader.textContent = team;
+                teamDiv.appendChild(teamHeader);
+
+                directory[team].forEach((entry) => {
+                    const storeDiv = document.createElement('div');
+                    storeDiv.className = 'store';
+
+                    const storeHeader = document.createElement('h3');
+                    storeHeader.textContent = entry.store;
+                    storeDiv.appendChild(storeHeader);
+
+                    const emailDiv = document.createElement('div');
+                    emailDiv.className = 'email';
+
+                    const emailSpan = document.createElement('span');
+                    emailSpan.textContent = entry.email || "TBD";
+                    emailDiv.appendChild(emailSpan);
+
+                    const copyButton = document.createElement('button');
+                    copyButton.className = 'copy-btn';
+                    copyButton.textContent = 'Copy';
+                    copyButton.onclick = () => navigator.clipboard.writeText(entry.email || "TBD");
+                    emailDiv.appendChild(copyButton);
+
+                    storeDiv.appendChild(emailDiv);
+                    teamDiv.appendChild(storeDiv);
+                });
+
+                directoryDiv.appendChild(teamDiv);
+            }
+        };
+
+        const addNewEntry = () => {
+            const teamName = document.getElementById('team-name').value.trim();
+            const storeName = document.getElementById('store-name').value.trim();
+            const email = document.getElementById('email').value.trim();
+
+            if (!teamName || !storeName || !email) {
+                alert('Please fill out all fields');
+                return;
+            }
+
+            if (!directory[teamName]) {
+                directory[teamName] = [];
+            }
+
+            directory[teamName].push({ store: storeName, email: email });
+
+            document.getElementById('team-name').value = '';
+            document.getElementById('store-name').value = '';
+            document.getElementById('email').value = '';
+
+            renderDirectory();
+        };
+
+        renderDirectory();
+    </script>
+</body>
+</html>
