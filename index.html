@@ -9,225 +9,207 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f9f9f9;
+            background-color: #f4f4f9;
         }
 
         .container {
-            width: 90%;
-            max-width: 1200px;
+            max-width: 800px;
             margin: 20px auto;
-            padding: 20px;
             background: #fff;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
         }
 
         .team {
             margin-bottom: 20px;
-            border-bottom: 1px solid #ddd;
-            padding-bottom: 10px;
         }
 
         .team h2 {
-            background-color: #666;
-            color: #fff;
+            background-color: #0073e6;
+            color: white;
             padding: 10px;
             border-radius: 4px;
-            margin-top: 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-        }
-
-        .team h2 button {
-            background: none;
-            border: none;
-            font-size: 18px;
-            color: #fff;
-            cursor: pointer;
         }
 
         .store {
-            margin: 10px 0 20px 20px;
+            margin-left: 20px;
+            margin-top: 10px;
         }
 
         .store h3 {
-            margin: 5px 0;
-            color: #444;
+            margin-bottom: 5px;
         }
 
         .email {
-            margin: 5px 0 5px 40px;
-            display: flex;
-            align-items: center;
-        }
-
-        .email span {
-            margin-right: 10px;
-        }
-
-        .copy-btn, .add-email-btn {
-            background-color: #444;
-            color: #fff;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 4px;
+            margin-left: 20px;
+            color: #0073e6;
             cursor: pointer;
-            margin-left: 10px;
         }
 
-        .copy-btn:hover, .add-email-btn:hover {
-            background-color: #222;
+        .email:hover {
+            text-decoration: underline;
         }
 
         .add-section {
             margin-top: 20px;
-            padding-top: 20px;
-            text-align: center;
-            border-top: 2px solid #444;
         }
 
-        .add-section button {
-            background-color: #444;
-            color: #fff;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            padding: 5px 10px;
+        input, button {
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
             border-radius: 4px;
         }
 
-        .add-section button:hover {
-            background-color: #222;
+        button {
+            background-color: #0073e6;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #005bb5;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div id="directory"></div>
+        <h1>Team Directory</h1>
+        <div id="directory">
+            <!-- Teams will be dynamically added here -->
+        </div>
 
         <div class="add-section">
-            <button onclick="showAddTeamForm()">+</button>
+            <h3>Add New Team</h3>
+            <input type="text" id="newTeamName" placeholder="Team Name">
+            <button onclick="addTeam()">Add Team</button>
         </div>
     </div>
 
     <script>
-        // Default data for all teams and stores
-        const defaultDirectory = {
-            "Team Gordy Campbell": [
-                { store: "IHWorkwear", email: "ihhelp@interform.net" },
-                { store: "IH", email: "ihhelp@interform.net" },
-                { store: "ICH", email: "TBD" }
-            ],
-            "Team Jim Hirst": [
-                { store: "Instructure", email: "jh_team@interform.net" },
-                { store: "AllWest", email: "AllWest@Interform.net" },
-                { store: "Karius", email: "karius@interform.net" }
-            ],
-            "Team Mike Hirst": [
-                { store: "CacheVB", email: "CacheValley@interform.net" },
-                { store: "Campbell", email: "" },
-                { store: "IFG Golf", email: "mike@interform.net" }
-            ]
-        };
+        const directory = document.getElementById('directory');
 
-        // Load the directory from localStorage, merge with default if needed
-        const loadDirectory = () => {
-            const savedDirectory = JSON.parse(localStorage.getItem('teamDirectory')) || {};
-            return { ...defaultDirectory, ...savedDirectory };
-        };
+        const teams = [
+            {
+                name: "Team Gordy Campbell",
+                stores: [
+                    { name: "IHWorkwear", emails: ["ihhelp@interform.net"] },
+                    { name: "IH", emails: ["ihhelp@interform.net"] },
+                    { name: "ICH", emails: ["TBD"] },
+                    { name: "EXTRA SPACE UNIFORM", emails: ["ess@interform.net"] },
+                    { name: "EXTRA SPACE ANNIVERSARY", emails: ["info@ExtraSpaceAnniversary.americommerce.com"] },
+                    { name: "EXTRA SPACE SIGNAGE", emails: ["info@ExtraSpaceSignage.americommerce.com"] }
+                ]
+            },
+            {
+                name: "Team Jim Hirst",
+                stores: [
+                    { name: "Instructure", emails: ["jh_team@interform.net"] },
+                    { name: "AllWest", emails: ["AllWest@Interform.net"] },
+                    { name: "Karius", emails: ["karius@interform.net"] },
+                    { name: "Altabank", emails: ["info@AltaBank.americommerce.com"] },
+                    { name: "Classic AM", emails: ["web@interform.net"] },
+                    { name: "CrucialLearning", emails: ["cruciallearning@interform.net"] },
+                    { name: "NiceChannel", emails: ["web@interform.net"] }
+                ]
+            },
+            {
+                name: "Team Mike Hirst",
+                stores: [
+                    { name: "CacheVB", emails: ["CacheValley@interform.net"] },
+                    { name: "IFG Golf", emails: ["mike@interform.net"] },
+                    { name: "Smiths", emails: ["smithsuniform@interform.net"] },
+                    { name: "Zions", emails: ["zions@interform.net"] },
+                    { name: "ZionsNewHire", emails: ["zions@interform.net"] }
+                ]
+            },
+            {
+                name: "Team Troy Osborn",
+                stores: [
+                    { name: "Tab", emails: [] },
+                    { name: "Ascend", emails: [] },
+                    { name: "CRS", emails: [] }
+                ]
+            },
+            {
+                name: "Team Candace Hadley",
+                stores: [
+                    { name: "CRH", emails: ["crhmerch@interform.net"] },
+                    { name: "DealerBuilt", emails: ["DealerBuilt@interform.net"] }
+                ]
+            },
+            {
+                name: "Team Davis Wall",
+                stores: [
+                    { name: "Feller", emails: ["fellerwendtstore@interform.net"] },
+                    { name: "FreeUp Storage", emails: ["FreeUpStorage@interform.net"] },
+                    { name: "StorageStar", emails: ["StorageStar@interform.net"] }
+                ]
+            },
+            {
+                name: "Team Peggy",
+                stores: [
+                    { name: "Mountainland", emails: ["ms@interform.net"] }
+                ]
+            }
+        ];
 
-        // Save the directory back to localStorage
-        const saveDirectory = (directory) => {
-            localStorage.setItem('teamDirectory', JSON.stringify(directory));
-        };
-
-        let directory = loadDirectory();
-
-        const renderDirectory = () => {
-            const directoryDiv = document.getElementById('directory');
-            directoryDiv.innerHTML = '';
-
-            for (const team in directory) {
+        function renderDirectory() {
+            directory.innerHTML = '';
+            teams.forEach((team) => {
                 const teamDiv = document.createElement('div');
                 teamDiv.className = 'team';
 
-                const teamHeader = document.createElement('h2');
-                teamHeader.innerHTML = `
-                    ${team}
-                    <button onclick="toggleTeam('${team}')">▼</button>
-                `;
-                teamDiv.appendChild(teamHeader);
+                const teamTitle = document.createElement('h2');
+                teamTitle.textContent = team.name;
+                teamDiv.appendChild(teamTitle);
 
-                const teamStoresDiv = document.createElement('div');
-                teamStoresDiv.style.display = 'none';
-                teamStoresDiv.id = `stores-${team}`;
-
-                directory[team].forEach((entry, index) => {
+                team.stores.forEach((store) => {
                     const storeDiv = document.createElement('div');
                     storeDiv.className = 'store';
 
-                    const storeHeader = document.createElement('h3');
-                    storeHeader.textContent = entry.store;
-                    storeDiv.appendChild(storeHeader);
+                    const storeTitle = document.createElement('h3');
+                    storeTitle.textContent = store.name;
+                    storeDiv.appendChild(storeTitle);
 
-                    const emailDiv = document.createElement('div');
-                    emailDiv.className = 'email';
+                    store.emails.forEach((email) => {
+                        const emailDiv = document.createElement('div');
+                        emailDiv.className = 'email';
+                        emailDiv.textContent = email;
+                        emailDiv.onclick = () => copyToClipboard(email);
+                        storeDiv.appendChild(emailDiv);
+                    });
 
-                    const emailSpan = document.createElement('span');
-                    emailSpan.textContent = entry.email || "TBD";
-                    emailDiv.appendChild(emailSpan);
-
-                    if (entry.email === "TBD") {
-                        const addEmailButton = document.createElement('button');
-                        addEmailButton.className = 'add-email-btn';
-                        addEmailButton.textContent = "Add Email";
-                        addEmailButton.onclick = () => addEmailToStore(team, index);
-                        emailDiv.appendChild(addEmailButton);
-                    } else {
-                        const copyButton = document.createElement('button');
-                        copyButton.className = 'copy-btn';
-                        copyButton.textContent = 'Copy';
-                        copyButton.onclick = () => navigator.clipboard.writeText(entry.email);
-                        emailDiv.appendChild(copyButton);
-                    }
-
-                    storeDiv.appendChild(emailDiv);
-                    teamStoresDiv.appendChild(storeDiv);
+                    teamDiv.appendChild(storeDiv);
                 });
 
-                teamDiv.appendChild(teamStoresDiv);
-                directoryDiv.appendChild(teamDiv);
-            }
-        };
+                directory.appendChild(teamDiv);
+            });
+        }
 
-        const toggleTeam = (team) => {
-            const teamStoresDiv = document.getElementById(`stores-${team}`);
-            teamStoresDiv.style.display = teamStoresDiv.style.display === 'none' ? 'block' : 'none';
-        };
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert(`Copied: ${text}`);
+            });
+        }
 
-        const showAddTeamForm = () => {
-            const teamName = prompt("Enter the new team name:");
+        function addTeam() {
+            const teamName = document.getElementById('newTeamName').value;
             if (teamName) {
-                if (!directory[teamName]) {
-                    directory[teamName] = [];
-                    saveDirectory(directory);
-                    renderDirectory();
-                } else {
-                    alert("Team already exists!");
-                }
-            }
-        };
-
-        const addEmailToStore = (team, storeIndex) => {
-            const email = prompt("Enter the email address:");
-            if (email) {
-                directory[team][storeIndex].email = email;
-                saveDirectory(directory);
+                teams.push({ name: teamName, stores: [] });
                 renderDirectory();
+                document.getElementById('newTeamName').value = '';
+            } else {
+                alert('Please enter a team name.');
             }
-        };
+        }
 
         renderDirectory();
     </script>
