@@ -96,7 +96,8 @@
     <script>
         const directory = document.getElementById('directory');
 
-        const teams = [
+        // Load teams from localStorage or use default teams
+        const defaultTeams = [
             {
                 name: "Team Gordy Campbell",
                 stores: [
@@ -124,6 +125,7 @@
                 name: "Team Mike Hirst",
                 stores: [
                     { name: "CacheVB", emails: ["CacheValley@interform.net"] },
+                    { name: "Campbell", emails: [] },
                     { name: "IFG Golf", emails: ["mike@interform.net"] },
                     { name: "Smiths", emails: ["smithsuniform@interform.net"] },
                     { name: "Zions", emails: ["zions@interform.net"] },
@@ -161,24 +163,39 @@
             }
         ];
 
+        let teams = JSON.parse(localStorage.getItem('teams')) || defaultTeams;
+
         function renderDirectory() {
             directory.innerHTML = '';
-            teams.forEach((team) => {
+            teams.forEach((team, teamIndex) => {
                 const teamDiv = document.createElement('div');
                 teamDiv.className = 'team';
 
                 const teamTitle = document.createElement('h2');
                 teamTitle.textContent = team.name;
+
+                const addStoreSection = document.createElement('div');
+                addStoreSection.innerHTML = `
+                    <input type="text" placeholder="Store Name" id="storeName${teamIndex}">
+                    <button onclick="addStore(${teamIndex})">Add Store</button>
+                `;
+
                 teamDiv.appendChild(teamTitle);
 
-                team.stores.forEach((store) => {
+                team.stores.forEach((store, storeIndex) => {
                     const storeDiv = document.createElement('div');
                     storeDiv.className = 'store';
 
                     const storeTitle = document.createElement('h3');
                     storeTitle.textContent = store.name;
-                    storeDiv.appendChild(storeTitle);
 
+                    const addEmailSection = document.createElement('div');
+                    addEmailSection.innerHTML = `
+                        <input type="text" placeholder="Email Address" id="email${teamIndex}-${storeIndex}">
+                        <button onclick="addEmail(${teamIndex}, ${storeIndex})">Add Email</button>
+                    `;
+
+                    storeDiv.appendChild(storeTitle);
                     store.emails.forEach((email) => {
                         const emailDiv = document.createElement('div');
                         emailDiv.className = 'email';
@@ -187,9 +204,11 @@
                         storeDiv.appendChild(emailDiv);
                     });
 
+                    storeDiv.appendChild(addEmailSection);
                     teamDiv.appendChild(storeDiv);
                 });
 
+                teamDiv.appendChild(addStoreSection);
                 directory.appendChild(teamDiv);
             });
         }
@@ -204,11 +223,38 @@
             const teamName = document.getElementById('newTeamName').value;
             if (teamName) {
                 teams.push({ name: teamName, stores: [] });
+                saveTeams();
                 renderDirectory();
                 document.getElementById('newTeamName').value = '';
             } else {
                 alert('Please enter a team name.');
             }
+        }
+
+        function addStore(teamIndex) {
+            const storeName = document.getElementById(`storeName${teamIndex}`).value;
+            if (storeName) {
+                teams[teamIndex].stores.push({ name: storeName, emails: [] });
+                saveTeams();
+                renderDirectory();
+            } else {
+                alert('Please enter a store name.');
+            }
+        }
+
+        function addEmail(teamIndex, storeIndex) {
+            const email = document.getElementById(`email${teamIndex}-${storeIndex}`).value;
+            if (email) {
+                teams[teamIndex].stores[storeIndex].emails.push(email);
+                saveTeams();
+                renderDirectory();
+            } else {
+                alert('Please enter an email address.');
+            }
+        }
+
+        function saveTeams() {
+            localStorage.setItem('teams', JSON.stringify(teams));
         }
 
         renderDirectory();
